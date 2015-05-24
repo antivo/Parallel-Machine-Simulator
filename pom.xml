@@ -1,0 +1,57 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>hr.fer.zemris.parallelmachinesimulator</groupId>
+  <artifactId>parallel-machine-simulator</artifactId>
+  <version>1.0</version>
+  <packaging>jar</packaging>
+
+  <name>Parallel Machine Simulator</name>
+  <url>http://maven.apache.org</url>
+
+  <build>
+    <plugins>
+      <plugin>
+        <!-- Build an executable JAR -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.4</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <mainClass>hr.fer.zemris.parallelmachinesimulator.Main</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <jsoup.version>1.7.2</jsoup.version>
+    <boilerpipe.version>1.1.0</boilerpipe.version>
+    <xerces.version>2.9.1</xerces.version>
+    <nekohtml.version>1.9.13</nekohtml.version>
+  </properties>
+
+  <dependencies>
+      <dependency>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-context</artifactId>
+          <version>4.1.6.RELEASE</version>
+      </dependency>
+      <dependency>
+          <groupId>org.python</groupId>
+          <artifactId>jython-standalone</artifactId>
+          <version>2.7-b4</version>
+      </dependency>
+      <!--dependency>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+          <version>3.8.1</version>
+          <scope>test</scope>
+      </dependency-->
+  </dependencies>
+</project>
