@@ -23,8 +23,11 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="Parallel-Machine-Simulator" />
+        <module name="parallel-machine-simulator" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="parallel-machine-simulator" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

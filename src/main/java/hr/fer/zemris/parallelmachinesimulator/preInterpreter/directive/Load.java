@@ -59,7 +59,7 @@ public class Load implements PreInterpreterDirective {
         assertCommandParts(parts);
         String filename = parts[1];
         try {
-            List<String> lines = FileUtils.readScript(filename);
+            List<String> lines = FileUtils.getInstance().loadScript(filename);
             lines = lines.stream()
                     .map(ss ->
                             generateOffset(offset) +

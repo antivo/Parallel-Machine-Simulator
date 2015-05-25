@@ -46,7 +46,7 @@ public class JointMemory  {
         if(!Collections.disjoint(memories, readingAccessed)) {
             memories.retainAll(readingAccessed);
             Set<String> locations = memories.stream().map(m -> m.getLocation()).collect(Collectors.toSet());
-            throw new MemoryViolation("Joint memory reading constraint violation. Multiple reading from memory locations: " + StringUtils.concatenateWithComma(locations));
+            throw new MemoryViolation("Shared memory reading constraint violation. Multiple reading from memory locations: " + StringUtils.concatenateWithComma(locations));
         } else {
             readPerNode.addAll(memories);
         }
@@ -55,7 +55,7 @@ public class JointMemory  {
     public void writingToLocation(Memory memory) throws MemoryViolation {
         if(!ignorePerNode.contains(memory)) {
             if (writingAccessed.contains(memory)) {
-                throw new MemoryViolation("Joint memory reading constraint violation. Multiple writing to memory locations: " + memory.getLocation());
+                throw new MemoryViolation("Shared memory reading constraint violation. Multiple writing to memory locations: " + memory.getLocation());
             } else {
                 writePerNode.add(memory);
             }

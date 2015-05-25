@@ -21,7 +21,7 @@ import java.util.List;
  */
 @Component
 public class ParallelMachineSimulator implements Runnable {
-    private static final String SCAN_FUNCTION_SOURCE = "src/main/resources/scan.py";
+    private static final String SCAN_FUNCTION_SOURCE = "scan.py";
 
     @Autowired
     private ActiveInterpreter activeInterpreter;
@@ -35,7 +35,7 @@ public class ParallelMachineSimulator implements Runnable {
     public void reset() {
         pythonInterpreter.setLocalsTo(Py.newStringMap());
         try {
-            List<String> xss = FileUtils.readScript(SCAN_FUNCTION_SOURCE);
+            List<String> xss = FileUtils.getInstance().readScript(SCAN_FUNCTION_SOURCE);
             String source = StringUtils.concatenate(xss);
             pythonInterpreter.exec(source);
         } catch (Exception e) {

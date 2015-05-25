@@ -70,9 +70,6 @@ public class Memory {
             } else {
                 equalOrSubset = isAlias(anotherMemory) || isIntersected(anotherMemory);
             }
-            if(equalOrSubset) {
-                equalize(this, anotherMemory);
-            }
         }
         return equalOrSubset;
     }

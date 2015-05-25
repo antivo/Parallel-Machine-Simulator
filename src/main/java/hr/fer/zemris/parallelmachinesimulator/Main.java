@@ -1,15 +1,29 @@
 package hr.fer.zemris.parallelmachinesimulator;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.FileNotFoundException;
 
+
 /**
  * Created by antivo
  */
 public class Main {
-    private static void startPMS() {
+    private static Main instance;
+
+    public static Main getInstance() {
+        if (instance == null) {
+            instance = new Main();
+        }
+        return instance;
+    }
+
+    private void startPMS() {
+        //PropertyConfigurator.configure(getClass().getResourceAsStream("/log4j.properties"));
+        //Logger.getRootLogger().removeAllAppenders();
         ApplicationContext ctx =
                 new ClassPathXmlApplicationContext("applicationContext.xml");
         ParallelMachineSimulator pms = ctx.getBean(ParallelMachineSimulator.class);
@@ -17,6 +31,6 @@ public class Main {
     }
 
     public static void main( String[] args ) throws FileNotFoundException {
-        startPMS();
+        getInstance().startPMS();
     }
 }
