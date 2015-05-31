@@ -6,6 +6,8 @@ import hr.fer.zemris.parallelmachinesimulator.preInterpreter.PreInterpreterDirec
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 /**
  * Created by antivo
  */
@@ -16,12 +18,24 @@ public class Comment implements PreInterpreterDirective {
     @Autowired
     private ParallelMachineSimulator parallelMachineSimulator;
 
-    @Override
-    public boolean process(String line) throws SyntaxException {
+    public Optional<String> removeComment(String line) {
+        if(canProcess(line)) {
         int position = line.indexOf(KEYWORD);
         String extractedLine = line.substring(0, position);
-        if(!extractedLine.trim().equals("")) {
-            parallelMachineSimulator.pushLine(extractedLine);
+            if(!extractedLine.trim().equals("")) {
+                return Optional.of(extractedLine);
+            } else {
+                return Optional.empty();
+            }
+        }
+        return Optional.of(line);
+    }
+
+    @Override
+    public boolean process(String line) throws SyntaxException {
+        Optional<String> extractedLine = removeComment(line);
+        if(extractedLine.isPresent()) {
+            parallelMachineSimulator.pushLine(extractedLine.get());
         }
         return true;
     }

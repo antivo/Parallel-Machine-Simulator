@@ -29,6 +29,7 @@ public class Assignment extends AbstractPRAMProcessor {
     private String value;
     private String assignment;
     private Optional<String> il;
+    private String line;
 
     @Autowired
     private PythonInterpreter pythonInterpreter;
@@ -87,6 +88,8 @@ public class Assignment extends AbstractPRAMProcessor {
         this.var = parts[0].trim();
         this.value = parts[1].trim();
         determineIL();
+
+        this.line = line.trim();
     }
 
     private PyObject getValue() throws SyntaxException {
@@ -104,13 +107,20 @@ public class Assignment extends AbstractPRAMProcessor {
 
     @Override
     protected void executeBlock() throws SyntaxException, MemoryViolation {
-        PyObject pyObject = getValue();
+        /*PyObject pyObject = getValue();
         try {
             pythonInterpreter.set(var, pyObject);
             if(pythonInterpreter.eval(var) == null) {
-                throw new SyntaxException("Can not assign: '" + value + "' to: '" + var + "'");
+                throw new SyntaxException("Can not assign: '" + value + "' to: '" + var + "'. Value of expression on the right: " + pyObject);
             }
         } catch (Exception e){
+            throw new SyntaxException("Can not assign: '" + value + "' to: '" + var + "'");
+        }*/
+
+        try {
+            pythonInterpreter.exec(line);
+        } catch(Exception e) {
+            System.out.println(e);
             throw new SyntaxException("Can not assign: '" + value + "' to: '" + var + "'");
         }
     }

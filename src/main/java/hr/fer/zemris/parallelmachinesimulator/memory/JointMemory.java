@@ -23,22 +23,22 @@ public class JointMemory  {
 
 
     public void reset() {
-        readingAccessed = new HashSet<>();
-        writingAccessed = new HashSet<>();
+        readingAccessed.clear();
+        writingAccessed.clear();
 
-        readPerNode = new HashSet<>();
-        writePerNode = new HashSet<>();
-        ignorePerNode = new HashSet<>();
+        readPerNode.clear();
+        writePerNode.clear();
+        ignorePerNode.clear();
     }
 
     public void nextNode() {
         readingAccessed.addAll(readPerNode);
-        readPerNode = new HashSet<>();
+        readPerNode.clear();
 
         writingAccessed.addAll(writePerNode);
-        writePerNode = new HashSet<>();
+        writePerNode.clear();
 
-        ignorePerNode = new HashSet<>();
+        ignorePerNode.clear();
     }
 
     public void readingFromLocation(Set<Memory> memories) throws MemoryViolation {

@@ -74,7 +74,8 @@ public class PRAMInterpreter implements Interpreter {
     public boolean push(String line) throws SyntaxException, MemoryViolation {
         memorizeState();
         // handle empty lines
-        if (line.equals("")) {
+        line = line.replaceAll("[\r\n]+$", "");
+        if (line.equals("") || line.equals(System.lineSeparator())) {
             executeStack();
             return false;
         } else if(line.trim().equals("")  && line.length() > 0) {

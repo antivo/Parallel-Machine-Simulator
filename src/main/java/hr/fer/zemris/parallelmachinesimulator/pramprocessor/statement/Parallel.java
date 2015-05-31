@@ -65,7 +65,7 @@ public class Parallel extends AbstractPRAMProcessor {
 
     @Override
     protected Optional<String> getRHS() {
-        return Optional.of(value);
+        return Optional.empty();
     }
 
     @Override

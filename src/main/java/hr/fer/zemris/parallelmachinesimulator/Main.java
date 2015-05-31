@@ -1,11 +1,14 @@
 package hr.fer.zemris.parallelmachinesimulator;
 
+import hr.fer.zemris.parallelmachinesimulator.utils.FileUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.FileNotFoundException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**

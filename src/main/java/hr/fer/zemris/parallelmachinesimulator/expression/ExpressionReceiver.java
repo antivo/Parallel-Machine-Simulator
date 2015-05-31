@@ -100,21 +100,26 @@ public class ExpressionReceiver {
     public void nextNode() {
         if(ignoreLocationAcc.size() > 0) {
             verboseComponent.info("--------IL: " + StringUtils.concatenateWithComma(ignoreLocationAcc));
-            ignoreLocationAcc = new HashSet<>();
+            ignoreLocationAcc.clear();
         }
         if(readLocationsAcc.size() > 0) {
             verboseComponent.info("--------RL: " + StringUtils.concatenateWithComma(readLocationsAcc));
-            readLocationsAcc = new HashSet<>();
+            readLocationsAcc.clear();
         }
         if(writeLocationsAcc.size() > 0) {
             verboseComponent.info("--------WL: " + StringUtils.concatenateWithComma(writeLocationsAcc));
-            writeLocationsAcc = new HashSet<>();
+            writeLocationsAcc.clear();
         }
         jointMemory.nextNode();
     }
 
     private void _receiveRHS(String rhs) throws SyntaxException, MemoryViolation {
         if(!rhs.trim().equals("")) {
+            /// hot fix, python does not support &&, ||, !
+            rhs = rhs.replaceAll("==", "+");
+            rhs = rhs.replaceAll(" and ", "+");
+            rhs = rhs.replaceAll(" or ", "+");
+            rhs = rhs.replaceAll("not ", "");
             Set<String> rhss = getRLocationsFromRHS(rhs);
             obtainedRHS(rhss);
         }
@@ -122,16 +127,28 @@ public class ExpressionReceiver {
 
     private Set<String> getRLocationsFromRHS(String rhs) throws SyntaxException, MemoryViolation {
         assertNoFunctionCalls(rhs);
-        rhs = rhs.replaceAll("[)(]", "");
+        rhs = rhs.replaceAll("[)(]", ""); //B[i]==1 && B[i-1]==0
         rhs = calculateValues(rhs, true);
         Set<String> dividedByOperators = divideByOperators(rhs);
+        for(String r : dividedByOperators) {
+            assertValid(r);
+        }
         Set<String> filteredLocations = dividedByOperators.stream().filter(ss -> isReadingLocation(ss)).collect(Collectors.toSet());
         Set<String> removedWhitespace = filteredLocations.stream().map(ss -> ss.replaceAll("\\s+", "")).collect(Collectors.toSet());
         return removedWhitespace;
     }
 
+    private void assertValid(String rhs) throws SyntaxException {
+        try {
+            pythonInterpreter.eval(rhs);
+        } catch(Exception e) {
+            // NOT SYNTAX EXCEPTION ..
+            throw new SyntaxException("Probably index out of range. Not able to determine logical error. Around '" + rhs + "'");
+        }
+    }
+
     private boolean isReadingLocation(String location) {
-        return !pythonInterpreter.eval(location).toString().equals(location) && !location.equals("null");
+        return !location.equals("null") && !pythonInterpreter.eval(location).toString().equals(location);
     }
 
     private Set<String> divideByOperators(String rhs) {

@@ -30,9 +30,6 @@ public class For extends AbstractPRAMProcessor {
     private Optional<String> il;
 
     @Autowired
-    private ExpressionReceiver expressionReceiver;
-
-    @Autowired
     private PythonInterpreter pythonInterpreter;
 
     @Override
@@ -99,6 +96,9 @@ public class For extends AbstractPRAMProcessor {
 
     @Override
     protected Optional<String> getRHS() {
+        if (value.startsWith("range(") || value.startsWith("xrange(")) {
+            return Optional.empty();
+        }
         return Optional.of(value);
     }
 

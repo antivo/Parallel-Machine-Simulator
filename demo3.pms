@@ -1,0 +1,23 @@
+# Napisati algoritam za EREW PRAM računalo koji će za zadano polje P[] odrediti broj različitih vrijednosti elemenata polja.
+# Npr. za polje [1, 2, 1, 3, 4, 2, 5, 1] rezultat iznosi 5. Za polje od n elemenata na raspolaganju je n procesora.
+# Rezultat mora biti zapisan u jednoj izlaznoj varijabli.
+
+:reset
+:verbose false      # has n-2 parallel loops, that is lot of output if verbose
+
+:pram RAM
+import random
+import operator
+
+n = 100
+range = 10
+P = [int(range*random.random()) for i in xrange(n)]
+
+rez = 1;
+for i in xrange(n-2):
+  inc = 1
+  parallel j in xrange(i+1,n-1):
+    if(P[j] == P[i]):
+      inc = 0
+  rez += inc
+

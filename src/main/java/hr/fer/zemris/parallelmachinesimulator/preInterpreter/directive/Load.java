@@ -22,6 +22,9 @@ public class Load implements PreInterpreterDirective {
     @Autowired
     private ParallelMachineSimulator parallelMachineSimulator;
 
+    @Autowired
+    private Comment comment;
+
     private static String generateOffset(int offset) {
         StringBuffer outputBuffer = new StringBuffer(offset);
         for (int i = 0; i < offset; ++i){
@@ -62,8 +65,11 @@ public class Load implements PreInterpreterDirective {
             List<String> lines = FileUtils.getInstance().loadScript(filename);
             lines = lines.stream()
                     .map(ss ->
-                            generateOffset(offset) +
-                                    (ss.length() > 1 && ss.charAt(ss.length()-1)=='\n'?ss.substring(0, ss.length() - 1):ss))
+                            generateOffset(offset) + ss.replaceAll("[\r\n]+$", ""))
+            //                (ss.length() > 1 && ss.charAt(ss.length()-1)=='\n'?ss.substring(0, ss.length() - 1):ss))
+            .map(ss -> comment.removeComment(ss))
+                    .filter(opt -> opt.isPresent())
+                    .map(opt -> opt.get())
                     .collect(Collectors.toList());
             publish(lines);
         } catch(FileNotFoundException e) {
