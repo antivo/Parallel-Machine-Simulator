@@ -3,6 +3,9 @@ package hr.fer.zemris.parallelmachinesimulator.pramprocessor.statement;
 import hr.fer.zemris.parallelmachinesimulator.exception.MemoryViolation;
 import hr.fer.zemris.parallelmachinesimulator.exception.SyntaxException;
 import hr.fer.zemris.parallelmachinesimulator.interpreter.PythonInterpreter;
+import hr.fer.zemris.parallelmachinesimulator.memory.JointMemory;
+import hr.fer.zemris.parallelmachinesimulator.memory.Memory;
+import hr.fer.zemris.parallelmachinesimulator.memory.MemoryFactory;
 import hr.fer.zemris.parallelmachinesimulator.model.MemoryModel;
 import hr.fer.zemris.parallelmachinesimulator.pramprocessor.AbstractPRAMProcessor;
 import hr.fer.zemris.parallelmachinesimulator.pramprocessor.BlockProperty;
@@ -32,9 +35,16 @@ public class Assignment extends AbstractPRAMProcessor {
     private String line;
 
     @Autowired
+    private JointMemory jointMemory;
+
+    @Autowired
+    private MemoryFactory memoryFactory;
+
+    @Autowired
     private PythonInterpreter pythonInterpreter;
 
     public static final String KEYWORD = "=";
+    public static final String ALWAYS_IGNORE = "~";
 
     private static final char ASSIGNMENT = '=';
     private static final List<String> ASSIGNMENTS = new ArrayList<>(Arrays.asList(
@@ -80,16 +90,27 @@ public class Assignment extends AbstractPRAMProcessor {
         }
     }
 
+    private void alwaysIgnore() {
+        if(this.var.startsWith(ALWAYS_IGNORE)) {
+            this.var = this.var.substring(1, this.var.length());
+            this.line = this.line.substring(1, this.line.length());
+            Memory memory = memoryFactory.createMemory(this.var);
+            jointMemory.addPermanentIgnore(memory);
+        }
+    }
+
     @Override
     protected void assign(String line) throws SyntaxException {
         String[] parts = breakStatement(line);
         assertPartsOfStatement(parts, line);
 
+        this.line = line.trim();
         this.var = parts[0].trim();
         this.value = parts[1].trim();
+        alwaysIgnore();
         determineIL();
 
-        this.line = line.trim();
+
     }
 
     private PyObject getValue() throws SyntaxException {

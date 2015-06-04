@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  */
 @Component
 public class ExpressionReceiver {
-    private static final Character[] _operators = {'+', '*', '-', '/', '%', '!', '<', '>', '&', '|', '^', '~'};
+    private static final Character[] _operators = {'+', '*', '-', '/', '%', '!', '<', '>', '&', '|', '^', '~', '='};
     private static final HashSet<Character> OPERATORS = new HashSet<Character>(Arrays.asList(_operators));
 
     private Set<String> readLocationsAcc = new HashSet<>();
@@ -97,6 +97,12 @@ public class ExpressionReceiver {
         obtainedLHS(lhs);
     }
 
+    public void reset() {
+        ignoreLocationAcc.clear();
+        readLocationsAcc.clear();
+        writeLocationsAcc.clear();
+    }
+
     public void nextNode() {
         if(ignoreLocationAcc.size() > 0) {
             verboseComponent.info("--------IL: " + StringUtils.concatenateWithComma(ignoreLocationAcc));
@@ -143,7 +149,7 @@ public class ExpressionReceiver {
             pythonInterpreter.eval(rhs);
         } catch(Exception e) {
             // NOT SYNTAX EXCEPTION ..
-            throw new SyntaxException("Probably index out of range. Not able to determine logical error. Around '" + rhs + "'");
+            throw new SyntaxException("Probably index out of range. Not able to determine error. Around '" + rhs + "'");
         }
     }
 

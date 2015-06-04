@@ -28,7 +28,16 @@ public class Memory {
         return mem1.getLocation().equals(mem2.getLocation());
     }
 
-    private boolean isIntersected(Memory anotherMemory) {
+    public boolean isSubSet(Memory anotherMemory) {
+        int thisLocationLength = this.getLocation().length();
+        int anotherLocationLength = anotherMemory.getLocation().length();
+        if(thisLocationLength - anotherLocationLength > 1) {
+            return this.getLocation().startsWith(anotherMemory.getLocation());
+        }
+        return false;
+    }
+
+    public boolean isIntersected(Memory anotherMemory) {
         int thisLocationLength = this.getLocation().length();
         int anotherLocationLength = anotherMemory.getLocation().length();
         if(Math.abs(thisLocationLength - anotherLocationLength) > 1) {

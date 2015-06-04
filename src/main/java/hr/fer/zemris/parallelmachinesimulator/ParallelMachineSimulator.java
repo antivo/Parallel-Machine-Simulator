@@ -4,6 +4,7 @@ import hr.fer.zemris.parallelmachinesimulator.constants.ConsoleConstants;
 import hr.fer.zemris.parallelmachinesimulator.exception.SyntaxException;
 import hr.fer.zemris.parallelmachinesimulator.interpreter.ActiveInterpreter;
 import hr.fer.zemris.parallelmachinesimulator.interpreter.PythonInterpreter;
+import hr.fer.zemris.parallelmachinesimulator.pramprocessor.statement.Parallel;
 import hr.fer.zemris.parallelmachinesimulator.utils.FileUtils;
 import hr.fer.zemris.parallelmachinesimulator.utils.StringUtils;
 import org.python.core.Py;
@@ -29,10 +30,14 @@ public class ParallelMachineSimulator implements Runnable {
     @Autowired
     private PythonInterpreter pythonInterpreter;
 
+    @Autowired
+    private Parallel parallel;
+
     private final List<String> lines = Collections.synchronizedList(new LinkedList<>());
 
     @PostConstruct
     public void reset() {
+        parallel.clear();
         pythonInterpreter.setLocalsTo(Py.newStringMap());
         try {
             List<String> xss = FileUtils.getInstance().readScript(SCAN_FUNCTION_SOURCE);

@@ -1,0 +1,30 @@
+:reset
+:verbose false
+
+:pram RAM
+import random
+import operator
+
+:pram EREW
+~n = 10
+~p = [0,1,2,3,4,5,6,7,8,9]
+
+:pram EREW
+copy = [0] * n #~copy = [0] * n
+rez = [0] * n
+parallel i in xrange(n):
+   rez[i] = 0
+   copy[i] = p[i]
+
+parallel i in xrange(n-1):
+ if(copy[i] <= p[i+1]):
+   rez[i] = 1
+
+# ako je sortirano, svih n elemenata moraju imati sljedbenika koji je veći ili jednak od njih, što znači da su svi pisali rez[i]=1
+uk = reduce(operator.add, rez);
+isSorted = uk == (n-1)
+if(isSorted):
+  print "SORTED!!"
+
+if(not isSorted):
+  print "NOT SORTED!!"

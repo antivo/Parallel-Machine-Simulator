@@ -1,7 +1,9 @@
 package hr.fer.zemris.parallelmachinesimulator.memory;
 
 import hr.fer.zemris.parallelmachinesimulator.exception.MemoryViolation;
+import hr.fer.zemris.parallelmachinesimulator.output.VerboseComponent;
 import hr.fer.zemris.parallelmachinesimulator.utils.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -14,6 +16,8 @@ import java.util.stream.Collectors;
  */
 @Component
 public class JointMemory  {
+    private Set<Memory> ignorePermanent = new HashSet<>();
+
     private Set<Memory> readingAccessed = new HashSet<>();
     private Set<Memory> writingAccessed = new HashSet<>();
 
@@ -21,8 +25,15 @@ public class JointMemory  {
     private Set<Memory> writePerNode = new HashSet<>();
     private Set<Memory> ignorePerNode = new HashSet<>();
 
+    @Autowired
+    private VerboseComponent verboseComponent;
 
     public void reset() {
+        restart();
+        ignorePermanent.clear();
+    }
+
+    public void restart() {
         readingAccessed.clear();
         writingAccessed.clear();
 
@@ -41,8 +52,20 @@ public class JointMemory  {
         ignorePerNode.clear();
     }
 
+    public void addPermanentIgnore(Memory memory) {
+        ignorePermanent.add(memory);
+        verboseComponent.info("--AI: " + memory.getLocation());
+    }
+
     public void readingFromLocation(Set<Memory> memories) throws MemoryViolation {
         memories.removeAll(ignorePerNode);
+        memories.removeAll(ignorePermanent);
+        for(Memory ignored : ignorePermanent) {
+            memories = memories.stream().filter(m -> !m.isSubSet(ignored)).collect(Collectors.toSet());
+        }
+        for(Memory ignored : ignorePerNode) {
+            memories = memories.stream().filter(m -> !m.isSubSet(ignored)).collect(Collectors.toSet());
+        }
         if(!Collections.disjoint(memories, readingAccessed)) {
             memories.retainAll(readingAccessed);
             Set<String> locations = memories.stream().map(m -> m.getLocation()).collect(Collectors.toSet());
@@ -53,7 +76,14 @@ public class JointMemory  {
     }
 
     public void writingToLocation(Memory memory) throws MemoryViolation {
-        if(!ignorePerNode.contains(memory)) {
+        boolean isSub = false;
+        for(Memory ignored : ignorePerNode) {
+            isSub &= memory.isSubSet(ignored);
+            if(isSub) {
+                break;
+            }
+        }
+        if(!ignorePermanent.contains(memory) && !ignorePerNode.contains(memory) && !isSub) {
             if (writingAccessed.contains(memory)) {
                 throw new MemoryViolation("Shared memory reading constraint violation. Multiple writing to memory locations: " + memory.getLocation());
             } else {
