@@ -4,11 +4,11 @@ Parallel Machine Simulator
 @Author: stjepan.antivo.ivica@gmail.com
 
 Pre - Interpreter statements
-\# This is a comment
-:load <from_file>	
-:pram <MODEL>         ; CRCW, CREW, EREW, ERCW, RAM
-:reset
-:verbose <Boolean>
+1. comments start with '#'
+2. :load <from_file>	
+3. :pram <MODEL>         ; CRCW, CREW, EREW, ERCW, RAM
+4. :reset
+5. :verbose <Boolean>
 
 Interpreter statements 
 * Syntax is Python - like
