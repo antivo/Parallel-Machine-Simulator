@@ -103,13 +103,11 @@ public class Assignment extends AbstractPRAMProcessor {
     protected void assign(String line) throws SyntaxException {
         String[] parts = breakStatement(line);
         assertPartsOfStatement(parts, line);
-
         this.line = line.trim();
         this.var = parts[0].trim();
         this.value = parts[1].trim();
         alwaysIgnore();
         determineIL();
-
 
     }
 

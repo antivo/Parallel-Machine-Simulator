@@ -83,7 +83,7 @@ public class JointMemory  {
                 break;
             }
         }
-        if(!ignorePermanent.contains(memory) && !ignorePerNode.contains(memory) && !isSub) {
+        if(!isSub && !ignorePermanent.contains(memory) && !ignorePerNode.contains(memory)) {
             if (writingAccessed.contains(memory)) {
                 throw new MemoryViolation("Shared memory reading constraint violation. Multiple writing to memory locations: " + memory.getLocation());
             } else {

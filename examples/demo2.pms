@@ -1,0 +1,24 @@
+# CRCW, number of different elements in array P
+
+:reset
+:verbose false      # has n-2 parallel loops, that is lot of output if verbose
+
+:pram RAM
+import random
+import operator
+
+n = 20
+range = 20
+P = [int(range*random.random()) for i in xrange(n)]
+
+:pram CRCW
+rez = 1;
+for i in xrange(n-2):
+  inc = 1
+  parallel j in xrange(i+1,n-1):
+    if(P[j] == P[i]):
+      inc = 0
+  rez += inc
+
+print P
+print rez

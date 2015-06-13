@@ -25,7 +25,7 @@ public class PRAMInterpreter implements Interpreter {
     private PyObject pythonInterpreterState = null;
 
     @Autowired
-    private ApplicationContext applicationContext;
+    private Parallel parallel;
 
     @Autowired
     private PythonInterpreter pythonInterpreter;
@@ -114,6 +114,6 @@ public class PRAMInterpreter implements Interpreter {
         pythonInterpreter.setLocalsTo(pythonInterpreterState);
         pythonInterpreterState = null;
         clean = true;
-        applicationContext.getBean(Parallel.class).clear(); // clear parallel processorpp
+        parallel.clear(); // clear parallel processorpp
     }
 }

@@ -130,7 +130,6 @@ public class Parallel extends AbstractPRAMProcessor {
     public void clear() {
         cleanSubBlocks();
         active = false;
-        jointMemory.reset();
         expressionReceiver.reset();
     }
 }

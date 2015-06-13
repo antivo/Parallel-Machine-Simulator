@@ -1,17 +1,32 @@
 :reset
+:verbose false
+
+:pram RAM
+import random
 import operator
-:verbose true
-:pram CRCW
-print reduce(lambda x, y: x+y, [1, 2, 3, 4, 5])
-print scan(operator.add, [1,2,3])
-x = [1,2,3,3,3,3,3]
-y = [[1,2,3],[1,2,3],[1,2,3],[1,2,3]]
-g = [1,2,3,4,5,6,7]
-parallel i in [1,2,3]:
- j = i
- z = x[i -1] + 5 + y[x[j-1]][ 1]
- print z
- g[x[4] - 1] = 2
- print g[x[4] - 1]
- print 1
- print [1,2,3]
+
+:pram EREW
+~n = 10
+~p = [0,1,2,3,4,5,6,7,8,9]
+
+:pram EREW
+~copy = [0] * n
+rez = [0] * n
+parallel i in xrange(n-1):
+   rez[i] = 0
+   copy[i] = p[i]
+
+parallel i in xrange(n-1):
+ print copy[i]
+ print p[i+1]
+ if(copy[i] <= p[i+1]):
+   rez[i] = 1
+
+# ako je sortirano, svih n elemenata moraju imati sljedbenika koji je veći ili jednak od njih, što znači da su svi pisali rez[i]=1
+uk = reduce(operator.add, rez);
+isSorted = uk == (n-1)
+if(isSorted):
+  print "SORTED!!"
+
+if(not isSorted):
+  print "NOT SORTED!!"

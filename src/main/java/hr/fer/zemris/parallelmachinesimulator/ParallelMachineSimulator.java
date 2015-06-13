@@ -4,6 +4,7 @@ import hr.fer.zemris.parallelmachinesimulator.constants.ConsoleConstants;
 import hr.fer.zemris.parallelmachinesimulator.exception.SyntaxException;
 import hr.fer.zemris.parallelmachinesimulator.interpreter.ActiveInterpreter;
 import hr.fer.zemris.parallelmachinesimulator.interpreter.PythonInterpreter;
+import hr.fer.zemris.parallelmachinesimulator.memory.JointMemory;
 import hr.fer.zemris.parallelmachinesimulator.pramprocessor.statement.Parallel;
 import hr.fer.zemris.parallelmachinesimulator.utils.FileUtils;
 import hr.fer.zemris.parallelmachinesimulator.utils.StringUtils;
@@ -33,10 +34,14 @@ public class ParallelMachineSimulator implements Runnable {
     @Autowired
     private Parallel parallel;
 
+    @Autowired
+    private JointMemory jointMemory;
+
     private final List<String> lines = Collections.synchronizedList(new LinkedList<>());
 
     @PostConstruct
     public void reset() {
+        jointMemory.reset();
         parallel.clear();
         pythonInterpreter.setLocalsTo(Py.newStringMap());
         try {
