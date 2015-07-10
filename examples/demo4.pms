@@ -1,3 +1,5 @@
+# is array P sorted
+
 :reset
 :verbose false
 
@@ -20,7 +22,7 @@ parallel i in xrange(n-1):
  if(copy[i] <= p[i+1]):
    rez[i] = 1
 
-# ako je sortirano, svih n elemenata moraju imati sljedbenika koji je veći ili jednak od njih, što znači da su svi pisali rez[i]=1
+# if sorted all nodes have done rez[i]=1, there were n-1 comparisons
 uk = reduce(operator.add, rez);
 isSorted = uk == (n-1)
 if(isSorted):
